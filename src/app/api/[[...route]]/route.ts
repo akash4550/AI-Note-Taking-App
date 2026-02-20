@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { auth } from "@clerk/nextjs/server";
 import app from "@/server/app";
 import { NextRequest } from "next/server";

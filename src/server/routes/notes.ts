@@ -4,7 +4,6 @@ import { db } from "@/db";
 import { notes } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { aiService } from "@/lib/ai-service";
-import type { Note } from "@/db/schema";
 
 const notesRouter = new Hono();
 
