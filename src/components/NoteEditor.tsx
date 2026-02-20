@@ -98,7 +98,7 @@ export function NoteEditor({
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       {/* Main Editor */}
       <div className="flex-1 flex flex-col">
         <div className="border-b p-4 flex items-center justify-between">
