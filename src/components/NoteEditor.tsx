@@ -29,7 +29,7 @@ interface NoteEditorProps {
 }
 
 export function NoteEditor({
-  noteId,
+  // Removed noteId from here to fix the unused variable build error
   initialTitle = "",
   initialContent = "",
   initialTags = [],
