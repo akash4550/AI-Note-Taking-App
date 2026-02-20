@@ -35,29 +35,7 @@ A high-performance, full-stack, AI-powered note-taking application designed to s
 
 ---
 
-## 🗂 Project Structure
-
-```text
-src/
-├── app/                    # Next.js App Router (Frontend)
-│   ├── api/               # Hono.js API catch-all ([[...route]]/route.ts)
-│   ├── notes/             # Main application interface
-│   └── layout.tsx         # Root layout & providers
-├── components/            # React UI components
-│   ├── ui/               # shadcn/ui primitives
-│   ├── NoteEditor.tsx    # Tiptap rich text editor core
-│   └── AISidebar.tsx     # Gemini AI feature controls
-├── db/                    # Database Configuration
-│   ├── schema.ts         # Drizzle schema definitions
-│   └── index.ts          # DB connection instance
-├── lib/                   # Utilities & Services
-│   ├── ai-service.ts     # Google Gemini SDK integration
-│   └── utils.ts          # Tailwind merge & helper functions
-└── server/                # Backend Logic
-    ├── app.ts            # Hono application setup
-    └── routes/           # RESTful API route handlers
-        └── notes.ts      # Notes CRUD & AI endpoints
-Getting Started (Local Development)1. Clone & InstallBashgit clone [https://github.com/akash4550/AI-Note-Taking-App.git](https://github.com/akash4550/AI-Note-Taking-App.git)
+🚀 Getting Started (Local Development)1. Clone & InstallBashgit clone [https://github.com/akash4550/AI-Note-Taking-App.git](https://github.com/akash4550/AI-Note-Taking-App.git)
 cd AI-Note-Taking-App
 npm install
 2. Configure Environment VariablesCreate a .env.local file in the project root. Never commit this file.Code snippet# Clerk Authentication
