@@ -1,4 +1,4 @@
-## AI Note-Taking App
+## AI Note-Taking App   |  **Open** [https://ai-note-taking-app-six.vercel.app/](https://ai-note-taking-app-six.vercel.app/)
 
 A full‑stack, AI‑powered note‑taking application built with Next.js 14 (App Router), Clerk authentication, Neon + Drizzle ORM, and Google Gemini for summarisation, grammar fixes, and auto‑tagging.
 
@@ -262,7 +262,6 @@ src/
    npm run dev
    ```
 
-5. **Open** [https://ai-note-taking-app-six.vercel.app/](https://ai-note-taking-app-six.vercel.app/)
 
 ## Database Schema
 
