@@ -32,28 +32,28 @@ async function handleRequest(
 }
 export async function GET(
   req: NextRequest,
-  { params }: { params: { route: string[] } }
+  { params: _params }: { params: { route: string[] } }
 ) {
   return handleRequest(req, "GET");
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { route: string[] } }
+  { params: _params }: { params: { route: string[] } }
 ) {
   return handleRequest(req, "POST");
 }
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { route: string[] } }
+  { params: _params }: { params: { route: string[] } }
 ) {
   return handleRequest(req, "PATCH");
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { route: string[] } }
+  { params: _params }: { params: { route: string[] } }
 ) {
   return handleRequest(req, "DELETE");
 }
