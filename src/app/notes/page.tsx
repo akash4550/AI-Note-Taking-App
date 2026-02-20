@@ -211,6 +211,7 @@ export default function NotesPage() {
         <div className="flex-1">
           {selectedNote ? (
             <NoteEditor
+              key={selectedNote.id}
               noteId={selectedNote.id}
               initialTitle={selectedNote.title}
               initialContent={selectedNote.content}

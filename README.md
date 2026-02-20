@@ -1,3 +1,189 @@
+## AI Note-Taking App
+
+A full‑stack, AI‑powered note‑taking application built with Next.js 14 (App Router), Clerk authentication, Neon + Drizzle ORM, and Google Gemini for summarisation, grammar fixes, and auto‑tagging.
+
+### Features
+
+- **Authentication** via Clerk (sign up / sign in / protected notes area).
+- **Notes CRUD**: create, view, update, delete notes per user.
+- **Search & tags** for quick filtering.
+- **Rich text editor** using TipTap.
+- **AI tools** (Google Gemini):
+  - Summarise note content.
+  - Fix grammar & spelling.
+  - Auto‑generate relevant tags.
+
+### Tech Stack
+
+- **Framework**: Next.js 14 (App Router, `app/` directory).
+- **UI**: React 18, Tailwind CSS, Radix UI.
+- **Auth**: Clerk.
+- **Database**: Neon PostgreSQL + Drizzle ORM (`postgres` driver).
+- **AI**: Google Gemini via `@google/generative-ai`.
+
+---
+
+### Getting Started (Local)
+
+1. **Install dependencies**
+
+```bash
+npm install
+```
+
+2. **Create `.env.local` in the project root**
+
+Use your own credentials; do **not** commit this file.
+
+```bash
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+
+# Database (Neon PostgreSQL)
+DATABASE_URL=your_neon_postgres_connection_string
+
+# Google Gemini API
+GOOGLE_GEMINI_API_KEY=your_gemini_api_key
+```
+
+3. **Run database migrations (optional if schema already exists)**
+
+```bash
+# Generate migrations from schema
+npm run db:generate
+
+# Apply migrations
+npm run db:migrate
+```
+
+4. **Start the dev server**
+
+```bash
+npm run dev
+```
+
+Then open `http://localhost:3000`.
+
+---
+
+### Running in Production / Vercel
+
+On Vercel, you must configure the same environment variables in **Project → Settings → Environment Variables**:
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `NEXT_PUBLIC_CLERK_SIGN_IN_URL`
+- `NEXT_PUBLIC_CLERK_SIGN_UP_URL`
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL`
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL`
+- `DATABASE_URL`
+- `GOOGLE_GEMINI_API_KEY`
+
+The catch‑all API route at `src/app/api/[[...route]]/route.ts` is explicitly configured to run in the Node.js runtime:
+
+```12:18:src/app/api/[[...route]]/route.ts
+export const runtime = "nodejs";
+```
+
+This is required because the backend uses the `postgres` driver and stream handling that are not supported on the Edge runtime.
+
+To build locally:
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+### How Notes and AI Work
+
+- **Notes API** is implemented with Hono in `src/server/routes/notes.ts` and mounted under `/api/notes`.
+- Each request is authenticated via Clerk in `src/app/api/[[...route]]/route.ts`, which forwards the request into the Hono app and injects the `x-user-id` header.
+- The **Notes page** (`src/app/notes/page.tsx`) fetches notes from `/api/notes` and renders:
+  - A sidebar with all notes.
+  - A `NoteEditor` for the currently selected note.
+- The **AI sidebar** (`src/components/AISidebar.tsx`) calls:
+  - `POST /api/notes/ai/summarize`
+  - `POST /api/notes/ai/fix-grammar`
+  - `POST /api/notes/ai/auto-tag`
+  which are backed by `src/lib/ai-service.ts` (Google Gemini).
+
+---
+
+### Known Implementation Details / Fixes
+
+- **Switching between notes**: the `NoteEditor` component is keyed by the selected note ID:
+
+```210:224:src/app/notes/page.tsx
+{selectedNote ? (
+  <NoteEditor
+    key={selectedNote.id}
+    noteId={selectedNote.id}
+    initialTitle={selectedNote.title}
+    initialContent={selectedNote.content}
+    initialTags={selectedNote.tags}
+    onSave={handleSave}
+    onDelete={
+      selectedNoteId
+        ? () => handleDeleteNote(selectedNoteId)
+        : undefined
+    }
+  />
+) : (/* empty state */)}
+```
+
+This ensures that when you click a different note in the sidebar, the editor fully remounts with that note’s title and content (fixing the issue where the editor stayed on the previous note).
+
+- **AI model**: the app uses a current Gemini model:
+
+```28:36:src/lib/ai-service.ts
+class AIService {
+  private get model() {
+    return getGenAI().getGenerativeModel({
+      model: "gemini-3-flash-preview",
+      generationConfig: { temperature: 0.2 },
+    });
+  }
+}
+```
+
+If the model name becomes outdated in the future, update it here according to the latest Google Gemini documentation.
+
+---
+
+### Scripts
+
+- `npm run dev` – start dev server.
+- `npm run build` – production build.
+- `npm start` – run built app.
+- `npm run lint` – run ESLint.
+- `npm run db:generate` – generate Drizzle migrations.
+- `npm run db:migrate` – apply migrations.
+- `npm run db:push` – push schema directly to DB.
+- `npm run db:studio` – open Drizzle Studio.
+
+---
+
+### Troubleshooting
+
+- **Notes don’t change when clicking in sidebar**
+  - Ensure you’re on a version where `NoteEditor` is keyed by `selectedNote.id` as shown above.
+
+- **AI errors / no response**
+  - Confirm `GOOGLE_GEMINI_API_KEY` is set and valid.
+  - Check browser toasts for detailed error messages coming from the backend.
+
+- **Auth issues**
+  - Verify all Clerk env vars are correctly configured in Vercel and locally.
+
+If you hit a specific error, copy the stack trace or message and debug starting from the referenced file and line.
+
 # AI Note-Taking App
 
 A high-performance AI-powered note-taking application built with Next.js 14, Hono.js, PostgreSQL (Neon), Clerk authentication, and Google Gemini AI.
